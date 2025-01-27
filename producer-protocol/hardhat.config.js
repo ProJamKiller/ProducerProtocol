@@ -8,11 +8,12 @@ module.exports = {
       // local dev
     },
     mumbai: {
-      url: process.env.POLYGON_MUMBAI_URL, // INPUT_REQUIRED {Provide your Polygon Mumbai URL}
+      url: process.env.POLYGON_MUMBAI_URL, // https://polygon.mumbai.rpc.thirdweb.com}
       accounts: [process.env.PRIVATE_KEY] // INPUT_REQUIRED {Provide your private key}
     },
     optimismGoerli: {
-      url: process.env.OPTIMISM_GOERLI_URL, // INPUT_REQUIRED {Provide your Optimism Goerli URL}
+      url: process.env.OPTIMISM_GOERLI_URL, // https://optimism.goerli.rpc.thirdweb.com
+    }
       accounts: [process.env.PRIVATE_KEY] // INPUT_REQUIRED {Provide your private key}
     },
     // Add more networks if needed
