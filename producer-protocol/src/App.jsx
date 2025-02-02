@@ -1,11 +1,9 @@
-import './App.css'
+import { ThirdwebProvider } from "@thirdweb-dev/react";
 
 function App() {
   return (
-    <>
-      <h1>Producer Protocol</h1>
-    </>
-  )
+    <ThirdwebProvider activeChain="optimism">
+      {/* Your app components */}
+    </ThirdwebProvider>
+  );
 }
-
-export default App

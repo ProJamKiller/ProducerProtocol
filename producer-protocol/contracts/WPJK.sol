@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
+// In WPJK.sol and ProducerProtocolToken.sol
+import "@thirdweb-dev/contracts/base/ERC20Base.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol"; 
 
 contract WPJK is ERC20, AccessControl {
     bytes32 public constant BRIDGE_ROLE = keccak256("BRIDGE_ROLE");
