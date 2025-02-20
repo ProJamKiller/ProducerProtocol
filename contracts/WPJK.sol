@@ -1,48 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-// In WPJK.sol and ProducerProtocolToken.sol
-import "@thirdweb-dev/contracts/base/ERC20Base.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol"; 
+// Import OpenZeppelin's AccessControl and alias it to avoid naming conflicts.
+import { AccessControl as OZAccessControl } from "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract WPJK is ERC20, AccessControl {
-    bytes32 public constant BRIDGE_ROLE = keccak256("BRIDGE_ROLE");
-    address public bridgeContract;
+contract WPJK is OZAccessControl {
+    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    // Events for improved transparency
-    event BridgeContractUpdated(address indexed newBridgeContract);
-    event TokensMinted(address indexed to, uint256 amount);
-    event TokensBurned(address indexed from, uint256 amount);
-
-    constructor() ERC20("Wrapped PJK", "wPJK") {
+    constructor() {
+        // Set up roles using OpenZeppelin's AccessControl functions.
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setupRole(ADMIN_ROLE, msg.sender);
     }
 
-    // Update bridge contract address
-    function updateBridgeContract(address _bridgeContract) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        bridgeContract = _bridgeContract;
-        emit BridgeContractUpdated(_bridgeContract);
-    }
-
-    // Mint tokens with enhanced logging
-    function mint(address to, uint256 amount) external onlyRole(BRIDGE_ROLE) {
-        _mint(to, amount);
-        emit TokensMinted(to, amount);
-    }
-
-    // Burn tokens with enhanced logging
-    function burn(address from, uint256 amount) external onlyRole(BRIDGE_ROLE) {
-        _burn(from, amount);
-        emit TokensBurned(from, amount);
-    }
-
-    // Function to check if an address has the Bridge Role
-    function isBridgeRole(address account) public view returns (bool) {
-        return hasRole(BRIDGE_ROLE, account);
-    }
-
-    // Override supportsInterface for AccessControl compatibility
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC20, AccessControl) returns (bool) {
-        return super.supportsInterface(interfaceId);
-    }
+    // Add your additional functions and state variables here.
 }
