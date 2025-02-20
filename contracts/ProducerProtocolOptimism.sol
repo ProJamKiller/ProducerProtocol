@@ -3,20 +3,21 @@ pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 interface ICrossDomainMessenger {
     function sendMessage(address target, bytes calldata message, uint32 gasLimit) external;
     function xDomainSender() external view returns (address);
 }
 
-contract ProducerProtocolOptimism is ERC721, Ownable {
-    // Address of Optimism's Cross Domain Messenger
+contract ProducerProtocolOptimism is ERC721, Ownable, ReentrancyGuard {
+    // Address of the Optimism Cross Domain Messenger
     address public crossDomainMessenger;
-    // Trusted L1 contract address that initiates bridge minting
+    // Trusted L1 contract address initiating the bridge
     address public l1Contract;
-    // Next tokenId to use for admin minting (if required)
+    // Next token ID for admin minting
     uint256 public nextTokenId;
-    // Gas limit for sending messages to L1
+    // Gas limit for L1 message calls
     uint32 public constant L1_GAS_LIMIT = 1000000;
 
     event TokenBridgedIn(uint256 indexed tokenId, address indexed recipient);
@@ -31,15 +32,15 @@ contract ProducerProtocolOptimism is ERC721, Ownable {
     }
 
     /**
-     * @notice Called by the Cross Domain Messenger to mint an NFT on Optimism.
-     * @param tokenId The token ID to mint (should match the L1 record).
-     * @param recipient The address that will receive the NFT.
+     * @notice Bridge mint an NFT on Optimism by a validated L1 call.
+     * @param tokenId The token ID (should mirror the L1 record).
+     * @param recipient The address receiving the NFT.
      *
      * Requirements:
-     * - Must be called via the cross domain messenger.
-     * - The original sender on L1 must be the trusted L1 contract.
+     * - Must be called by the cross-domain messenger.
+     * - The originating L1 sender must match the trusted l1Contract.
      */
-    function bridgeMint(uint256 tokenId, address recipient) external {
+    function bridgeMint(uint256 tokenId, address recipient) external nonReentrant {
         require(msg.sender == crossDomainMessenger, "Unauthorized messenger");
         require(
             ICrossDomainMessenger(crossDomainMessenger).xDomainSender() == l1Contract,
@@ -51,28 +52,28 @@ contract ProducerProtocolOptimism is ERC721, Ownable {
     }
 
     /**
-     * @notice Burns an NFT on Optimism and notifies the L1 contract to complete the bridge.
+     * @notice Bridge out (burn) an NFT on Optimism and send a message to L1.
      * @param tokenId The token ID to bridge out.
-     * @param l1Recipient The address on L1 to receive or unlock the NFT.
+     * @param l1Recipient The address on L1 to receive/unlock the token.
      *
      * Requirements:
-     * - Caller must be the owner or approved operator for the token.
+     * - Caller must be the token owner or approved operator.
      */
-    function bridgeOut(uint256 tokenId, address l1Recipient) external {
+    function bridgeOut(uint256 tokenId, address l1Recipient) external nonReentrant {
         require(_isApprovedOrOwner(msg.sender, tokenId), "Caller is not owner nor approved");
         _burn(tokenId);
         emit TokenBridgedOut(tokenId, l1Recipient);
 
-        // Prepare the message for the L1 contract to complete the bridge out process.
+        // Prepare the message for L1 processing.
         bytes memory message = abi.encodeWithSignature("completeBridgeOut(uint256,address)", tokenId, l1Recipient);
         ICrossDomainMessenger(crossDomainMessenger).sendMessage(l1Contract, message, L1_GAS_LIMIT);
     }
 
     /**
-     * @notice Allows the owner to mint a new NFT directly on Optimism.
-     * @param recipient The address that will receive the minted NFT.
+     * @notice Allows the owner to mint NFTs directly on Optimism.
+     * @param recipient The address receiving the NFT.
      */
-    function adminMint(address recipient) external onlyOwner {
+    function adminMint(address recipient) external onlyOwner nonReentrant {
         uint256 tokenId = nextTokenId;
         nextTokenId++;
         _safeMint(recipient, tokenId);
