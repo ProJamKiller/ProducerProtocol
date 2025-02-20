@@ -20,7 +20,7 @@ contract ProducerProtocolToken is ERC20Base {
         string memory _name,
         string memory _symbol,
         address _initialOwner
-    ) ERC20Base(_name, _symbol, _initialOwner) {}
+    ) ERC20Base(_initialOwner, _name, _symbol) {}
 
     function mintArtistTokens(
         address to,
@@ -28,7 +28,7 @@ contract ProducerProtocolToken is ERC20Base {
         bytes32 projectId,
         uint256 percentage
     ) external {
-        require(msg.sender == owner(), "Caller is not the owner"); // Manual check
+        require(msg.sender == owner(), "Caller is not the owner");
         require(to != address(0), "Cannot mint to zero address");
         require(amount > 0, "Amount must be greater than zero");
         require(percentage <= 100, "Artist percentage must be between 0 and 100");
@@ -53,7 +53,7 @@ contract ProducerProtocolToken is ERC20Base {
         bytes32 projectId,
         uint256 percentage
     ) external {
-        require(msg.sender == owner(), "Caller is not the owner"); // Manual check
+        require(msg.sender == owner(), "Caller is not the owner");
         require(to != address(0), "Cannot mint to zero address");
         require(amount > 0, "Amount must be greater than zero");
         require(percentage <= 100, "Fan percentage must be between 0 and 100");
@@ -73,7 +73,8 @@ contract ProducerProtocolToken is ERC20Base {
     }
 
     function getProjectContributions(bytes32 projectId)
-        external view
+        external
+        view
         returns (Contribution[] memory)
     {
         return projectContributions[projectId];

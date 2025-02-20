@@ -1,5 +1,6 @@
-MIT License
+# License
 
+MIT License
 Copyright (c) 2025 Fletcher Christian
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
