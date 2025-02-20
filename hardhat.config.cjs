@@ -1,7 +1,8 @@
 require("dotenv").config();
+require("@nomicfoundation/hardhat-toolbox");
 
 module.exports = {
-  solidity: "0.8.15",
+  solidity: "0.8.17", // Changed from 0.8.15 to 0.8.17
   networks: {
     optimismGoerli: {
       url: process.env.OPTIMISM_GOERLI_RPC_URL || "https://rpc.thirdweb.com/optimism-goerli",
