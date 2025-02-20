@@ -3,8 +3,11 @@ pragma solidity ^0.8.20;
 
 import "@thirdweb-dev/contracts/base/ERC20Base.sol";
 
-
-contract ProducerProtocolToken is ERC20Base, 
+/**
+ * @title ProducerProtocolToken
+ * @dev An ERC20 token using thirdweb’s ERC20Base, with role-based minting for Artists and Fans.
+ */
+contract ProducerProtocolToken is ERC20Base {
     // Role definitions
     bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
     bytes32 public constant FAN_ROLE = keccak256("FAN_ROLE");
@@ -22,18 +25,15 @@ contract ProducerProtocolToken is ERC20Base,
     mapping(bytes32 => Contribution[]) public projectContributions;
 
     // Events for tracking contributions
-    event ArtistContribution(
-        bytes32 indexed projectId, 
-        address indexed artist, 
-        uint256 percentage
-    );
+    event ArtistContribution(bytes32 indexed projectId, address indexed artist, uint256 percentage);
+    event FanContribution(bytes32 indexed projectId, address indexed fan, uint256 percentage);
 
-    event FanContribution(
-        bytes32 indexed projectId, 
-        address indexed fan, 
-        uint256 percentage
-    );
-
+    /**
+     * @notice Constructor sets up the initial roles and token details.
+     * @param _name Token name.
+     * @param _symbol Token symbol.
+     * @param _initialOwner Address that will receive default admin and minter roles.
+     */
     constructor(
         string memory _name,
         string memory _symbol,
@@ -43,52 +43,70 @@ contract ProducerProtocolToken is ERC20Base,
         _setupRole(MINTER_ROLE, _initialOwner);
     }
 
-    // Mint tokens with role-based restrictions
+    /**
+     * @notice Mint tokens for an artist, track the contribution percentage.
+     * @param to Address receiving tokens.
+     * @param amount Number of tokens to mint.
+     * @param projectId Unique ID for the project.
+     * @param percentage Percentage assigned to the artist for this contribution.
+     */
     function mintArtistTokens(
-        address to, 
-        uint256 amount, 
-        bytes32 projectId, 
+        address to,
+        uint256 amount,
+        bytes32 projectId,
         uint256 percentage
     ) external onlyRole(MINTER_ROLE) {
         _mint(to, amount);
-        
-        projectContributions[projectId].push(Contribution({
-            contributor: to,
-            artistPercentage: percentage,
-            fanPercentage: 0,
-            timestamp: block.timestamp
-        }));
+
+        projectContributions[projectId].push(
+            Contribution({
+                contributor: to,
+                artistPercentage: percentage,
+                fanPercentage: 0,
+                timestamp: block.timestamp
+            })
+        );
 
         emit ArtistContribution(projectId, to, percentage);
     }
 
-    // Mint fan tokens
+    /**
+     * @notice Mint tokens for a fan, track the contribution percentage.
+     * @param to Address receiving tokens.
+     * @param amount Number of tokens to mint.
+     * @param projectId Unique ID for the project.
+     * @param percentage Percentage assigned to the fan for this contribution.
+     */
     function mintFanTokens(
-        address to, 
-        uint256 amount, 
-        bytes32 projectId, 
+        address to,
+        uint256 amount,
+        bytes32 projectId,
         uint256 percentage
     ) external onlyRole(MINTER_ROLE) {
         _mint(to, amount);
-        
-        projectContributions[projectId].push(Contribution({
-            contributor: to,
-            artistPercentage: 0,
-            fanPercentage: percentage,
-            timestamp: block.timestamp
-        }));
+
+        projectContributions[projectId].push(
+            Contribution({
+                contributor: to,
+                artistPercentage: 0,
+                fanPercentage: percentage,
+                timestamp: block.timestamp
+            })
+        );
 
         emit FanContribution(projectId, to, percentage);
     }
 
-    // Get project contributions
-    function getProjectContributions(bytes32 projectId) 
-        external 
-        view 
-        returns (Contribution[] memory) 
+    /**
+     * @notice Get all contributions for a given project ID.
+     * @param projectId Unique identifier of the project.
+     * @return An array of Contribution structs detailing each contribution made.
+     */
+    function getProjectContributions(bytes32 projectId)
+        external
+        view
+        returns (Contribution[] memory)
     {
         return projectContributions[projectId];
     }
-
-    // Additional governance and utility functions can be added here
 }
