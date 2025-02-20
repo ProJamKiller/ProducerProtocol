@@ -2,9 +2,9 @@
 pragma solidity ^0.8.20;
 
 import "@thirdweb-dev/contracts/base/ERC20Base.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract ProducerProtocolToken is ERC20Base, AccessControl {
+
+contract ProducerProtocolToken is ERC20Base, 
     // Role definitions
     bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
     bytes32 public constant FAN_ROLE = keccak256("FAN_ROLE");
