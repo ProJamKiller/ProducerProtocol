@@ -64,7 +64,6 @@ contract ProducerProtocolToken is ERC20Base {
                 artistPercentage: percentage,
                 fanPercentage: 0,
                 timestamp: block.timestamp
-            })
         );
 
         emit ArtistContribution(projectId, to, percentage);
@@ -109,4 +108,3 @@ contract ProducerProtocolToken is ERC20Base {
     {
         return projectContributions[projectId];
     }
-}
