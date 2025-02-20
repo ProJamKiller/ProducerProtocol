@@ -1,19 +1,15 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.17;
 
 import "@thirdweb-dev/contracts/base/ERC20Base.sol";
 
-/**
- * @title ProducerProtocolToken
- * @dev An ERC20 token using thirdweb’s ERC20Base, with role-based minting for Artists and Fans.
- */
 contract ProducerProtocolToken is ERC20Base {
     // Role definitions
     bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
     bytes32 public constant FAN_ROLE = keccak256("FAN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-    // Tracking contribution percentages
+    // Contribution struct
     struct Contribution {
         address contributor;
         uint256 artistPercentage;
@@ -21,10 +17,10 @@ contract ProducerProtocolToken is ERC20Base {
         uint256 timestamp;
     }
 
-    // Mapping of project contributions
+    // Mapping of project IDs to arrays of Contribution structs
     mapping(bytes32 => Contribution[]) public projectContributions;
 
-    // Events for tracking contributions
+    // Events for logging
     event ArtistContribution(bytes32 indexed projectId, address indexed artist, uint256 percentage);
     event FanContribution(bytes32 indexed projectId, address indexed fan, uint256 percentage);
 
@@ -32,30 +28,31 @@ contract ProducerProtocolToken is ERC20Base {
      * @notice Constructor sets up the initial roles and token details.
      * @param _name Token name.
      * @param _symbol Token symbol.
-     * @param _initialOwner Address that will receive default admin and minter roles.
+     * @param _initialOwner Address that receives the default admin and minter roles.
      */
     constructor(
         string memory _name,
         string memory _symbol,
         address _initialOwner
-    ) ERC20Base(_name, _symbol, _initialOwner) {
+    )
+        ERC20Base(_name, _symbol, _initialOwner)
+    {
         _setupRole(DEFAULT_ADMIN_ROLE, _initialOwner);
         _setupRole(MINTER_ROLE, _initialOwner);
     }
 
     /**
-     * @notice Mint tokens for an artist, track the contribution percentage.
-     * @param to Address receiving tokens.
-     * @param amount Number of tokens to mint.
-     * @param projectId Unique ID for the project.
-     * @param percentage Percentage assigned to the artist for this contribution.
+     * @notice Mint tokens for an artist and track the contribution percentage.
      */
     function mintArtistTokens(
         address to,
         uint256 amount,
         bytes32 projectId,
         uint256 percentage
-    ) external onlyRole(MINTER_ROLE) {
+    )
+        external
+        onlyRole(MINTER_ROLE)
+    {
         _mint(to, amount);
 
         projectContributions[projectId].push(
@@ -64,24 +61,24 @@ contract ProducerProtocolToken is ERC20Base {
                 artistPercentage: percentage,
                 fanPercentage: 0,
                 timestamp: block.timestamp
+            })
         );
 
         emit ArtistContribution(projectId, to, percentage);
     }
 
     /**
-     * @notice Mint tokens for a fan, track the contribution percentage.
-     * @param to Address receiving tokens.
-     * @param amount Number of tokens to mint.
-     * @param projectId Unique ID for the project.
-     * @param percentage Percentage assigned to the fan for this contribution.
+     * @notice Mint tokens for a fan and track the contribution percentage.
      */
     function mintFanTokens(
         address to,
         uint256 amount,
         bytes32 projectId,
         uint256 percentage
-    ) external onlyRole(MINTER_ROLE) {
+    )
+        external
+        onlyRole(MINTER_ROLE)
+    {
         _mint(to, amount);
 
         projectContributions[projectId].push(
@@ -98,8 +95,6 @@ contract ProducerProtocolToken is ERC20Base {
 
     /**
      * @notice Get all contributions for a given project ID.
-     * @param projectId Unique identifier of the project.
-     * @return An array of Contribution structs detailing each contribution made.
      */
     function getProjectContributions(bytes32 projectId)
         external
@@ -108,3 +103,4 @@ contract ProducerProtocolToken is ERC20Base {
     {
         return projectContributions[projectId];
     }
+}
