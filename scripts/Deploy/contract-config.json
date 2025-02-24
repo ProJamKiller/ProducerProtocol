@@ -1,0 +1,16 @@
+{
+    "name": "YourTokenName",
+    "symbol": "YourTokenSymbol",
+    "defaultAdmin": "0x2af17552f27021666BcD3E5Ba65f68CB5Ec217fc",
+    "contractURI": {
+      "description": "Your token description",
+      "image": "URL to your token image",
+      "external_link": "Your project website URL"
+    },
+    "trustedForwarders": [],
+    "primarySaleRecipient": "0x2af17552f27021666BcD3E5Ba65f68CB5Ec217fc",
+    "royaltyRecipient": "0x2af17552f27021666BcD3E5Ba65f68CB5Ec217fc",
+    "royaltyBps": 0,
+    "platformFeeBps": 0,
+    "platformFeeRecipient": "0x2af17552f27021666BcD3E5Ba65f68CB5Ec217fc"
+  }
