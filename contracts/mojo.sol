@@ -3,8 +3,8 @@ pragma solidity ^0.8.17;
 
 import "@thirdweb-dev/contracts/base/ERC20Base.sol";
 
-contract ProducerProtocolToken is ERC20Base {
-    uint256 public constant TOTAL_SUPPLY = 1_000_000 * 1e18; // Adjust as needed
+contract Mojo is ERC20Base {
+    uint256 public constant TOTAL_SUPPLY = 1_000_000 * 1e18;
 
     enum Role { Artist, Fan }
 
@@ -17,19 +17,22 @@ contract ProducerProtocolToken is ERC20Base {
 
     mapping(bytes32 => Contribution[]) public projectContributions;
 
-    event ContributionRecorded(bytes32 indexed projectId, address indexed contributor, Role role, uint256 percentage);
+    event ContributionRecorded(
+        bytes32 indexed projectId,
+        address indexed contributor,
+        Role role,
+        uint256 percentage
+    );
     event TokensBurned(address indexed burner, uint256 amount);
 
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _initialOwner
-    ) ERC20Base(_initialOwner, _name, _symbol) {
+    constructor(address _initialOwner)
+        ERC20Base(_initialOwner, "Mojo", "MOJO")
+    {
         _mint(_initialOwner, TOTAL_SUPPLY);
     }
 
     /**
-     * @notice Allocates tokens from the treasury to a contributor and records the contribution.
+     * @notice Allocates tokens from the treasury to a contributor and records their contribution.
      * @param to The address receiving tokens.
      * @param amount The amount to allocate.
      * @param projectId The unique identifier for the project.
@@ -48,12 +51,14 @@ contract ProducerProtocolToken is ERC20Base {
 
         _transfer(owner(), to, amount);
 
-        projectContributions[projectId].push(Contribution({
-            contributor: to,
-            role: role,
-            percentage: percentage,
-            timestamp: block.timestamp
-        }));
+        projectContributions[projectId].push(
+            Contribution({
+                contributor: to,
+                role: role,
+                percentage: percentage,
+                timestamp: block.timestamp
+            })
+        );
 
         emit ContributionRecorded(projectId, to, role, percentage);
     }
