@@ -1,16 +1,15 @@
 {
   "name": "Mojo",
   "symbol": "Mojo",
+  "type": "ERC20",
   "defaultAdmin": "0x2af17552f27021666BcD3E5Ba65f68CB5Ec217fc",
-  "contractURI": {
+  "contractURI": "ipfs://QmbKnUmjdTrdBgRqofVKzgtwHaQBno93AQfg7mtQijtZbw/0",
+  "metadata": {
     "description": "Mojo is the official token of the Producer Protocol ecosystem.",
     "image": "https://bafybeide4cxshzbued42ddhpq7xc364khdeip45gpfw44hgqv7qgt6mg2e.ipfs.dweb.link?filename=mojo.png",
     "external_link": "https://producerprotocol.pro/"
   },
-  "trustedForwarders": [],
   "primarySaleRecipient": "0x2af17552f27021666BcD3E5Ba65f68CB5Ec217fc",
-  "royaltyRecipient": "0x2af17552f27021666BcD3E5Ba65f68CB5Ec217fc",
-  "royaltyBps": 0,
   "platformFeeBps": 0,
   "platformFeeRecipient": "0x2af17552f27021666BcD3E5Ba65f68CB5Ec217fc"
 }
