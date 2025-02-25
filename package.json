@@ -3,12 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
+ "scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+  "preview": "vite preview",
+  "deploy:pjk": "node scripts/Deploy/deployPJKBurner.js",
+  "deploy:mojo": "node scripts/Deploy/deployMojo.js",
+  "deploy:swap": "node scripts/Deploy/deployMojoSwap.js"
+},
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.0",
     "@thirdweb-dev/contracts": "^3.15.0",
