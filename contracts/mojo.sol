@@ -3,8 +3,16 @@ pragma solidity ^0.8.17;
 
 import "@thirdweb-dev/contracts/base/ERC20Base.sol";
 
+/**
+ * @title Mojo Token
+ * @notice ERC20 token for Producer Protocol on Optimism.
+ *         This token replaces PJK and supports artist and fan interactions.
+ */
 contract Mojo is ERC20Base {
+    // Total token supply: 1,000,000 MOJO (with 18 decimals)
     uint256 public constant TOTAL_SUPPLY = 1_000_000 * 1e18;
+    // Designator to identify the main Producer Protocol token.
+    string public constant DESIGNATOR = "ProducerProtocolMainToken";
 
     enum Role { Artist, Fan }
 
@@ -15,6 +23,7 @@ contract Mojo is ERC20Base {
         uint256 timestamp;
     }
 
+    // Mapping to record contributions for each project by its unique ID.
     mapping(bytes32 => Contribution[]) public projectContributions;
 
     event ContributionRecorded(
@@ -25,6 +34,10 @@ contract Mojo is ERC20Base {
     );
     event TokensBurned(address indexed burner, uint256 amount);
 
+    /**
+     * @notice Constructor mints the total supply to the initial owner.
+     * @param _initialOwner The address that will own the initial supply.
+     */
     constructor(address _initialOwner)
         ERC20Base(_initialOwner, "Mojo", "MOJO")
     {
