@@ -5,14 +5,13 @@ import "@thirdweb-dev/contracts/base/ERC20Base.sol";
 
 /**
  * @title Mojo Token
- * @notice ERC20 token for Producer Protocol on Optimism.
- *         This token replaces PJK and supports artist and fan interactions.
+ * @notice ERC20 token for Producer Protocol on Optimism with dynamic minting.
+ *         Replaces PJK via swap/burn mechanism.
  */
 contract Mojo is ERC20Base {
-    // Total token supply: 1,000,000 MOJO (with 18 decimals)
-    uint256 public constant TOTAL_SUPPLY = 1_000_000 * 1e18;
-    // Designator to identify the main Producer Protocol token.
     string public constant DESIGNATOR = "ProducerProtocolMainToken";
+    address public swapContract; // Address allowed to mint Mojo
+    uint256 public swapRatio = 1; // 1 PJK = 1 Mojo (adjustable)
 
     enum Role { Artist, Fan }
 
@@ -23,34 +22,25 @@ contract Mojo is ERC20Base {
         uint256 timestamp;
     }
 
-    // Mapping to record contributions for each project by its unique ID.
     mapping(bytes32 => Contribution[]) public projectContributions;
 
-    event ContributionRecorded(
-        bytes32 indexed projectId,
-        address indexed contributor,
-        Role role,
-        uint256 percentage
-    );
+    event ContributionRecorded(bytes32 indexed projectId, address indexed contributor, Role role, uint256 percentage);
     event TokensBurned(address indexed burner, uint256 amount);
+    event TokensMintedForSwap(address indexed user, uint256 pjkAmount, uint256 mojoAmount);
 
     /**
-     * @notice Constructor mints the total supply to the initial owner.
-     * @param _initialOwner The address that will own the initial supply.
+     * @notice Constructor sets initial owner and swap contract.
+     * @param _initialOwner Address with owner privileges (e.g., 0x2af17552f27021666BcD3E5Ba65f68CB5Ec217fc).
      */
-    constructor(address _initialOwner)
-        ERC20Base(_initialOwner, "Mojo", "MOJO")
+    constructor(address _initialOwner) 
+        ERC20Base(_initialOwner, "Mojo", "MOJO") 
     {
-        _mint(_initialOwner, TOTAL_SUPPLY);
+        require(_initialOwner == 0x2af17552f27021666BcD3E5Ba65f68CB5Ec217fc, "Invalid initial owner");
+        swapContract = _initialOwner; // Initially owner, update to swap contract later
     }
 
     /**
-     * @notice Allocates tokens from the treasury to a contributor and records their contribution.
-     * @param to The address receiving tokens.
-     * @param amount The amount to allocate.
-     * @param projectId The unique identifier for the project.
-     * @param role The contributor's role (Artist or Fan).
-     * @param percentage The percentage allocation for this contribution.
+     * @notice Allocate tokens and record contribution (owner-only).
      */
     function allocateContribution(
         address to,
@@ -60,10 +50,7 @@ contract Mojo is ERC20Base {
         uint256 percentage
     ) external onlyOwner {
         require(to != address(0), "Invalid recipient");
-        require(balanceOf(owner()) >= amount, "Insufficient treasury tokens");
-
-        _transfer(owner(), to, amount);
-
+        _mint(to, amount); // Dynamic minting for contributions
         projectContributions[projectId].push(
             Contribution({
                 contributor: to,
@@ -72,16 +59,46 @@ contract Mojo is ERC20Base {
                 timestamp: block.timestamp
             })
         );
-
         emit ContributionRecorded(projectId, to, role, percentage);
     }
 
     /**
-     * @notice Allows token holders to burn their tokens.
-     * @param amount The amount of tokens to burn.
+     * @notice Mint Mojo for PJK swapped/burned (called by swap contract).
+     * @param user Address receiving Mojo.
+     * @param pjkAmount Amount of PJK burned on Polygon.
+     */
+    function mintForSwap(address user, uint256 pjkAmount) external onlySwapContract {
+        uint256 mojoAmount = pjkAmount * swapRatio;
+        _mint(user, mojoAmount);
+        emit TokensMintedForSwap(user, pjkAmount, mojoAmount);
+    }
+
+    /**
+     * @notice Burn Mojo tokens.
      */
     function burn(uint256 amount) external override {
         _burn(msg.sender, amount);
         emit TokensBurned(msg.sender, amount);
+    }
+
+    /**
+     * @notice Update swap contract address.
+     */
+    function setSwapContract(address _swapContract) external onlyOwner {
+        require(_swapContract != address(0), "Invalid address");
+        swapContract = _swapContract;
+    }
+
+    /**
+     * @notice Update swap ratio.
+     */
+    function setSwapRatio(uint256 _ratio) external onlyOwner {
+        require(_ratio > 0, "Invalid ratio");
+        swapRatio = _ratio;
+    }
+
+    modifier onlySwapContract() {
+        require(msg.sender == swapContract, "Only swap contract allowed");
+        _;
     }
 }
