@@ -2,116 +2,223 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Producer Protocol</title>
-  <meta name="description" content="Producer Protocol: Role-based token and NFT distribution for artists, fans, and producers.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Producer Protocol">
-  <meta property="og:description" content="An on-chain platform for Artists, Fans, and Producers to collaborate and share in success.">
-  <meta property="og:image" content="https://bafybeifmrowrbno5eocdbibjbdwnyrqqalzjgpkjadiey2hd2pcfzsqu6i.ipfs.dweb.link?filename=ProducerProtocolLogo.gif"> 
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Producer Protocol">
-  <meta name="twitter:description" content="An on-chain platform for Artists, Fans, and Producers to collaborate and share in success.">
-  <meta name="twitter:image" content="https://bafybeifmrowrbno5eocdbibjbdwnyrqqalzjgpkjadiey2hd2pcfzsqu6i.ipfs.dweb.link?filename=ProducerProtocolLogo.gif">
-
-  <!-- Basic Styles -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Producer Protocol App</title>
+  <!-- Import Google Fonts for a modern feel -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap">
   <style>
-    * {
+    /* Reset & Base Styles */
+    *, *::before, *::after {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      font-size: 16px;
     }
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-      background: #f4f4f4;
-      color: #333;
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      line-height: 1.6;
+      overflow-x: hidden;
     }
+    a {
+      color: #1DB954;
+      text-decoration: none;
+      transition: color 0.2s ease-in-out;
+    }
+    a:hover {
+      color: #1ED760;
+    }
+    
+    /* Beta Banner */
+    .beta-banner {
+      position: fixed;
+      top: 0;
+      right: 0;
+      background: #1DB954;
+      color: #121212;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 0 0 0 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      animation: flash 1.5s infinite;
+      z-index: 200;
+    }
+    @keyframes flash {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    
+    /* Header Styles */
     header {
-      background: #202020;
-      color: #fff;
-      padding: 1rem;
-      text-align: center;
+      position: relative;
+      height: 50vh;
+      /* Using the header image link you provided earlier */
+      background: url("https://bafybeichh5ayc3oiogb7k5b36cteojashw55m4ysz3aejruevb2cry4iua.ipfs.dweb.link?filename=MojoClaimPageNewbackground%202.png") center/cover no-repeat;
     }
-    main {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .header-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      text-align: center;
-    }
-    h1 {
-      margin-top: 0;
-      font-size: 2rem;
-      color: #e74c3c;
-    }
-    p.info {
-      margin-top: 1rem;
-      line-height: 1.6;
-      font-size: 1.1rem;
-    }
-    ul.info {
-      text-align: left;
-      line-height: 1.6;
-      font-size: 1.1rem;
-    }
-    .gif-container {
-      margin-top: 2rem;
-    }
-    img {
-      max-width: 500px;
-      width: 100%;
-      height: auto;
-      border: 2px solid #ccc;
-    }
-    footer {
+      justify-content: center;
       text-align: center;
       padding: 1rem;
-      background: #202020;
+    }
+    .header-content h1 {
+      font-size: 3rem;
+      font-weight: 600;
       color: #fff;
-      margin-top: 2rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 15px rgba(30, 215, 96, 0.8);
+    }
+    .header-content p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      color: #ccc;
+    }
+    
+    /* Navigation */
+    nav {
+      background: #1e1e1e;
+      padding: 0.75rem 2rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    /* Container & Card Styles */
+    .container {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .card {
+      position: relative;
+      background: #1e1e1e;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background: rgba(30, 215, 96, 0.1);
+      filter: blur(20px);
+      z-index: -1;
+      border-radius: 12px;
+    }
+    
+    /* Headings & Text */
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #1DB954;
+      padding-bottom: 0.5rem;
+      color: #ffffff;
+    }
+    h3 {
+      font-size: 1.5rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: #ffffff;
+    }
+    p, li {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: #ccc;
+    }
+    ul {
+      list-style: disc inside;
+      margin-left: 1rem;
+    }
+    
+    /* Footer */
+    footer {
+      background: #1e1e1e;
+      padding: 1rem 2rem;
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      border-top: 1px solid #333;
+    }
+    
+    /* Utility: Backlit Text */
+    .backlit {
+      text-shadow: 0 0 15px rgba(30, 215, 96, 0.8);
     }
   </style>
 </head>
 <body>
-
+  <div class="beta-banner">Beta Pass is Minting Now!</div>
   <header>
-    <h1>Producer Protocol</h1>
-  </header>
-
-  <main>
-    <p class="info">
-      Producer Protocol is an on-chain platform that brings <strong>Artists, Fans, and Producers</strong> together. 
-      We provide role-based minting, contribution tracking, and transparent revenue sharing. 
-      Whether you're creating new music, podcasts, or any collaborative media, you can reward your backers and fans 
-      while keeping verifiable records on the blockchain.
-    </p>
-
-    <p class="info">
-      Core Features:
-    </p>
-    <ul class="info">
-      <li><strong>Role-Based Minting:</strong> Assign roles like <em>Artist</em>, <em>Fan</em>, or <em>Minter</em> and control who can mint tokens or NFTs.</li>
-      <li><strong>Contribution Tracking:</strong> Every token minted includes a record of <em>who</em> contributed, <em>how</em> they contributed, and <em>when</em>.</li>
-      <li><strong>Revenue Sharing:</strong> Distribute token ownership or revenue percentages seamlessly between participants.</li>
-      <li><strong>Scalability:</strong> Designed to operate across multiple chains (like Ethereum and Optimism) to keep fees low and transactions fast.</li>
-    </ul>
-
-    <div class="gif-container">
-      <img
-        src="https://ipfs.io/ipns/k51qzi5uqu5dib552w5gg7416imy5u8nk10artmw6bj9054a7a7zoi0uvaynml"
-        alt="Producer Protocol GIF"
-      />
+    <div class="header-content">
+      <h1 class="backlit">Producer Protocol</h1>
+      <p>Connecting Artists, Fans, and Producers on a decentralized platform for collaborative creation.</p>
     </div>
-  </main>
-
+  </header>
+  <nav>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#roles">Roles & Minting</a></li>
+      <li><a href="#tracking">Contribution Tracking</a></li>
+      <li><a href="#revenue">Revenue Sharing</a></li>
+      <li><a href="#scalability">Scalability</a></li>
+    </ul>
+  </nav>
+  <div class="container">
+    <section id="features" class="card">
+      <h2>Core Features</h2>
+      <p>Producer Protocol is an on-chain platform that brings Artists, Fans, and Producers together. We offer a suite of innovative features designed to enhance collaborative creation:</p>
+      <ul>
+        <li><strong>Role-Based Minting</strong> – Assign and manage roles (Artist, Fan, or Minter) to ensure only authorized participants can mint tokens or NFTs.</li>
+        <li><strong>Contribution Tracking</strong> – Every token minted includes verifiable records detailing who contributed, how, and when.</li>
+        <li><strong>Revenue Sharing</strong> – Seamlessly distribute revenue or token ownership percentages among all contributors on-chain.</li>
+        <li><strong>Scalability</strong> – Optimized for low fees and fast transactions by leveraging networks like Optimism integrated with Bitcoin functionality.</li>
+      </ul>
+    </section>
+    <section id="roles" class="card">
+      <h2>Roles & Minting</h2>
+      <p>Our platform enables role-based minting, allowing you to designate roles such as Artist, Fan, or Minter. This ensures that only authorized contributors can create and mint tokens, preserving the integrity of the creative process.</p>
+    </section>
+    <section id="tracking" class="card">
+      <h2>Contribution Tracking</h2>
+      <p>Every token minted on Producer Protocol includes comprehensive metadata that records each contribution. This immutable record ensures full transparency and accountability throughout the creative journey.</p>
+    </section>
+    <section id="revenue" class="card">
+      <h2>Revenue Sharing</h2>
+      <p>Our smart contract-based revenue sharing system automatically distributes revenue or token ownership percentages among all contributors. This guarantees fair compensation and on-chain verifiability for every participant.</p>
+    </section>
+    <section id="scalability" class="card">
+      <h2>Scalability</h2>
+      <p>Built on cutting-edge blockchain technology, Producer Protocol is engineered for scalability. By leveraging low-fee, high-speed networks like Optimism integrated with Bitcoin functionality, our platform is ready to expand seamlessly as demand grows.</p>
+    </section>
+  </div>
   <footer>
-    <p>© 2025 Producer Protocol. Building the future of collaborative creation.</p>
+    <p>© 2025 Producer Protocol. All rights reserved. Visit us at <a href="https://producerprotocol.pro" target="_blank">ProducerProtocol.pro</a>.</p>
   </footer>
-
 </body>
 </html>
