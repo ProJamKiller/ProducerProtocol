@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://*.ipfs.dweb.link; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; script-src 'none'; object-src 'none';">
   <title>Producer Protocol App</title>
+  <!-- Social Share Image -->
+  <meta property="og:image" content="https://bafybeigqtr5wfkl5bnfu6qx6fyossjyx5rolzdnir3ye5osk2lw7u34tu4.ipfs.dweb.link?filename=PPSS.jpeg">
+  <meta name="twitter:image" content="https://bafybeigqtr5wfkl5bnfu6qx6fyossjyx5rolzdnir3ye5osk2lw7u34tu4.ipfs.dweb.link?filename=PPSS.jpeg">
+  <!-- Favicon -->
+  <link rel="icon" type="image/gif" href="https://bafybeig6dpytw3q4v7vzdy6sb7q4x3apqgrvfi3zsbvb3n6wvs5unfr36i.ipfs.dweb.link?filename=480.gif">
   <!-- Import Google Fonts for a modern feel -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap">
   <style>
@@ -92,7 +97,7 @@
     
     /* Navigation */
     nav {
-      background: #1e1e1e;
+      background: #000;
       padding: 0.75rem 2rem;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
       position: sticky;
@@ -114,10 +119,11 @@
     }
     .card {
       position: relative;
-      background: #1e1e1e;
+      background: #000;
       padding: 1.5rem;
       border-radius: 8px;
       margin-bottom: 2rem;
+      overflow: hidden;
     }
     .card::before {
       content: "";
@@ -128,8 +134,30 @@
       bottom: -10px;
       background: rgba(30, 215, 96, 0.1);
       filter: blur(20px);
-      z-index: -1;
+      z-index: -2;
       border-radius: 12px;
+    }
+    /* Reflective Sheen on Cards */
+    .card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transform: skewX(-25deg);
+      opacity: 0.3;
+      animation: shine 2s infinite;
+      z-index: -1;
+    }
+    @keyframes shine {
+      from {
+        left: -100%;
+      }
+      to {
+        left: 100%;
+      }
     }
     
     /* Headings & Text */
@@ -158,7 +186,7 @@
     
     /* Footer */
     footer {
-      background: #1e1e1e;
+      background: #000;
       padding: 1rem 2rem;
       text-align: center;
       color: #888;
@@ -173,7 +201,9 @@
   </style>
 </head>
 <body>
-  <div class="beta-banner">Beta Pass is Minting Now!</div>
+  <div class="beta-banner">
+    <a href="https://producerprotocol.pro/beta-pass-for-that-ass?ref=feed" target="_blank">Beta Pass is Minting Now!</a>
+  </div>
   <header>
     <div class="header-content">
       <h1 class="backlit">Producer Protocol</h1>
