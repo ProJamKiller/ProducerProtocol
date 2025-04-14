@@ -5,13 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://*.ipfs.dweb.link; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; script-src 'none'; object-src 'none';">
   <title>Producer Protocol App</title>
+  
   <!-- Social Share Image -->
   <meta property="og:image" content="https://bafybeigqtr5wfkl5bnfu6qx6fyossjyx5rolzdnir3ye5osk2lw7u34tu4.ipfs.dweb.link?filename=PPSS.jpeg">
   <meta name="twitter:image" content="https://bafybeigqtr5wfkl5bnfu6qx6fyossjyx5rolzdnir3ye5osk2lw7u34tu4.ipfs.dweb.link?filename=PPSS.jpeg">
+  
   <!-- Favicon -->
   <link rel="icon" type="image/gif" href="https://bafybeig6dpytw3q4v7vzdy6sb7q4x3apqgrvfi3zsbvb3n6wvs5unfr36i.ipfs.dweb.link?filename=480.gif">
+  
   <!-- Import Google Fonts for a modern feel -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap">
+  
   <style>
     /* Reset & Base Styles */
     *, *::before, *::after {
@@ -28,6 +32,19 @@
       color: #e0e0e0;
       line-height: 1.6;
       overflow-x: hidden;
+      position: relative;
+    }
+    /* Ambient green glow overlay for the whole background */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(30,215,96,0.15), transparent 80%);
+      z-index: -5;
+      pointer-events: none;
     }
     a {
       color: #1DB954;
@@ -43,8 +60,8 @@
       position: fixed;
       top: 0;
       right: 0;
-      background: #1DB954;
-      color: #121212;
+      background-color: #1DB954;
+      color: #fff;
       padding: 0.5rem 1rem;
       font-size: 1rem;
       font-weight: 600;
@@ -54,9 +71,8 @@
       z-index: 200;
     }
     @keyframes flash {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
+      0%, 100% { background-color: #1DB954; }
+      50% { background-color: #17a44b; }
     }
     
     /* Header Styles */
@@ -125,15 +141,16 @@
       margin-bottom: 2rem;
       overflow: hidden;
     }
+    /* Enhanced ambient glow behind cards */
     .card::before {
       content: "";
       position: absolute;
-      top: -10px;
-      left: -10px;
-      right: -10px;
-      bottom: -10px;
-      background: rgba(30, 215, 96, 0.1);
-      filter: blur(20px);
+      top: -15px;
+      left: -15px;
+      right: -15px;
+      bottom: -15px;
+      background: rgba(30, 215, 96, 0.2);
+      filter: blur(25px);
       z-index: -2;
       border-radius: 12px;
     }
@@ -152,12 +169,8 @@
       z-index: -1;
     }
     @keyframes shine {
-      from {
-        left: -100%;
-      }
-      to {
-        left: 100%;
-      }
+      from { left: -100%; }
+      to { left: 100%; }
     }
     
     /* Headings & Text */
